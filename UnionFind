@@ -1,0 +1,40 @@
+class UnionFind:
+    def __init__(self,n):
+        #Initialize parents
+        self.parent = [i for i in range(n)]
+        #Initialize graph size
+        self.size = n * [1]
+    
+    def find(self, x):
+        #Check to see if the current node is the parent of the set
+        if x != self.parent[x]:
+            #If it is not, recursively call find until we reach the parent at 
+            #the top and compress the path by updating the current value once 
+            #we find the parent.
+            self.parent[x] = self.find(self.parent[x])
+            
+        #Return the parent once we get there
+        return self.parent[x]
+    
+    def union(self, u, v):
+        #Initialize the parents of both sets and their sizes
+        parent_u = self.find(u)
+        parent_v = self.find(v)
+        
+        size_u = self.size[parent_u]
+        size_v = self.size[parent_v]
+        
+        #Check to see if they are already the same set
+        if parent_u == parent_v:
+            return False
+        #If set u is bigger, make set v a child set of u
+        if size_u > size_v:
+            size_u += size_v
+            self.parent[parent_v] = parent_u
+        #If set v is bigger, make u a child set of v
+        else:
+            size_v += size_u
+            self.parent[parent_u] = parent_v
+            
+        return True
+
